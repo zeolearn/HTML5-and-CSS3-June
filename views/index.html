@@ -87,14 +87,13 @@
             </div>
             <div class="col-md-3">
                 <p>The File API</p>
-                <span>1. <input type="file" name="imageFile" value="Image File" id="inputFile">
+                <span class="filespan">1. <input type="file" name="imageFile" value="Image File" id="inputFile">
                 </span>
-                <br>
-                <span>2. <input type="file" name="multiFile" value="Multiple Files" multiple onchange="handleFiles(this.files)" id="multiFiles">
+                <span class="filespan">2. <input type="file" name="multiFile" value="Multiple Files" multiple onchange="handleFiles(this.files)" id="multiFiles">
                 </span>
-                <span>3. <input type="file" id="fileElem" multiple accept="image/*" style="display:none" onchange="handleFiles(this.files)">
+                <span class="filespan">3. <input type="file" id="fileElem" multiple accept="image/*" style="display:none" onchange="handleFiles(this.files)">
                 </span>
-                <a href="#" id="fileSelect">Select some files</a>
+                <a class="btn btn-normal" href="#" id="fileSelect">Select some files</a>
             </div>
             <div class="col-md-3">
 
