@@ -8,29 +8,34 @@
 (function () {
     // DOM elements are ready for JS to be applied
     $(document).ready(function () {
+
         // Selector API
+
         var blueNav = document.querySelector('li.navLink > a')
-        console.log('blueNav is: ',blueNav);
-        blueNav.setAttribute('style','text-decoration: underline;');
+        // console.log('blueNav is: ',blueNav);
+        // blueNav.setAttribute('style','text-decoration: underline;');
         var allNavs = document.querySelectorAll('li.navLink > a');
+
         for (index = 0; index < allNavs.length; index++) {
             var navStyles = allNavs[index].getAttribute('style');
             console.log('Nav styles are: ', navStyles);
-            allNavs[index].setAttribute('style','text-decoration: underline;'); 
+            allNavs[index].setAttribute('style', 'text-decoration: underline;');
         }
+
         //File API
+
         // var selectedFile = document.getElementById('input').files[0];
         var selectedFile = null;
-        getFile = function() {
+        handleSingleFile = function () {
             selectedFile = $('#input')[0].files[0]; // Could also be var selectedFile = $('#input').get(0).files[0]; 
             console.log('Selected File:', selectedFile);
         }
-        getImageFromFile = function(fileBlob) {
+        getImageFromFile = function (fileBlob) {
             //Process File Blob
         }
-        handleFiles = function() {
+        handleFiles = function () {
             var filesList = this.files;
-            console.log('Files List',filesList);
+            console.log('Files List', filesList);
         }
         //Beautified file select elements
         var fileSelect = document.getElementById("fileSelect"),
@@ -42,6 +47,7 @@
             }
             e.preventDefault(); // prevent navigation to "#"
         }, false);
+
         //Forms API
 
 
