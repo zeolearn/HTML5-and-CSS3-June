@@ -71,6 +71,7 @@
             fileElem = document.getElementById("fileElem");
 
         fileSelect.addEventListener("click", function (e) {
+            console.log('Event on Anchor Tag: ', e)
             if (fileElem) {
                 fileElem.click();
             }
@@ -91,6 +92,7 @@
          * Drag and drop file-select
          */
         function handleDragDropFileSelect(evt) {
+            console.log('Event', evt)
             evt.stopPropagation();
             evt.preventDefault();
 
@@ -121,7 +123,7 @@
                 reader.readAsDataURL(f);
 
                 //Display file info in output field
-                
+
                 output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
                     f.size, ' bytes, last modified: ',
                     f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
@@ -141,7 +143,23 @@
         dropZone.addEventListener('dragover', handleDragOver, false);
         dropZone.addEventListener('drop', handleDragDropFileSelect, false);
 
-
+        //Web Storage
+        if (!window.localStorage) {
+            alert('Your browser does not support localstorage')
+        }
+        else {
+            var store = window.localStorage
+            var testObj = {k1: 'Value1', k2: 'Value2'} //Create a JSON Object
+            store.setItem('testObjKey', JSON.stringify(testObj)); //Convert the object to its String form and store it in localStorage
+            console.log('dropzone to string ', dropZone.outerHTML)
+            store.setItem('dropZone', dropZone.outerHTML); //
+            if(store.getItem('testObjKey')) {
+                var testObjFromLocalStorage = JSON.parse(store.getItem('testObjKey'));
+                console.log('store item t_o ', testObjFromLocalStorage);
+                var dropZoneFromLocalStorage = store.getItem('dropZone');
+                console.log('store item d_z', dropZoneFromLocalStorage);
+            }
+        }
         /**
          * Forms API
          */
@@ -153,7 +171,6 @@
 
 
 
-        //Web Storage
     });
     // DOM elements and content are loaded for display
     $(window).load(function () {
