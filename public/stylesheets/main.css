@@ -94,6 +94,14 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+nav > div.container-fluid {
+    width: 100%;
+    margin: 0 0;
+    padding: 0 0;
+}
+body {
+    padding-top: 70px; 
+}
 ul.topNav {
     list-style-type: none;
     margin: 0;
@@ -121,6 +129,11 @@ li.navLink a:hover {
     background-color: #4CAF50;
 
 }
+article > h2 {
+    text-align: center;
+    color: gray;
+}
+
 footer {
     /*position: fixed;*/
     bottom: 0;
@@ -225,8 +238,16 @@ margin: 10px 5px 0 0;
     height: auto;
     width: 0;
   }
+main > h3 {
+    margin: 1em;
+    text-align: center;
+}
 
-
+section > p.segmenttitle, div.row > div > p {
+    font-weight: bolder;
+    text-align: center;
+    color: deepskyblue;
+}
 
 
 

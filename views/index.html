@@ -14,8 +14,11 @@
     <link rel="stylesheet" href="/stylesheets/normalize.css">
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/stylesheets/jquery-ui.min.css">
+    <link rel="stylesheet" href="/stylesheets/jquery-ui.theme.min.css">
     <link rel="stylesheet" href="/stylesheets/main.css">
     <script src="/javascripts/vendor/modernizr-2.8.3.min.js"></script>
+    <script src="/javascripts/support.js"></script>
 </head>
 
 <body>
@@ -24,20 +27,24 @@
         <![endif]-->
 
     <!-- Add your site or application content here -->
-    <header>
-        <nav>
+    <!--<header>-->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
             <ul class="topNav">
                 <li class="navLink active"><a href="#">Home</a></li>
                 <li class="navLink"><a href="#">Products</a></li>
                 <li class="navLink"><a href="#">About Us</a></li>
                 <li class="navLink navRight"><a href="#">Sign in</a></li>
             </ul>
-        </nav>
-    </header>
+        </div>
+    </nav>
+    <!--</header>-->
     <main class="container-fluid clearfix">
         <article class="row">
-            <h1 class="center-block">This is an example of the article element</h1>
+            <h2 class="center-block">The following examples are contained within an &lt;article&gt; element</h2>
+            <hr>
             <section id="part1" class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <p class="segmenttitle">Demonstrating the &lt;figure&gt; and &lt;figcatpion&gt; elements</p>
                 <p>Khardung La is a mountain pass located in the Ladakh region of the Indian state of Jammu and Kashmir. The
                     local pronunciation is "Khardong La" or "Khardzong La," but, as with most names in Ladakh, the romanised
                     spelling varies.</p>
@@ -50,6 +57,7 @@
                 </figure>
             </section>
             <section id="part2" class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <p class="segmenttitle">The &lt;video&gt; element</p>
                 <p>The Pyrenees is a range of mountains in southwest Europe that forms a natural border between France and Spain.
                     It separates the Iberian Peninsula from the rest of continental Europe, and extends for about 491 km
                     (305 mi) from the Bay of Biscay (Cap Higuer) to the Mediterranean Sea (Cap de Creus). This video clip
@@ -62,6 +70,7 @@
                 </video>
             </section>
             <section id="part3" class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <p class="segmenttitle">The &lt;embed&gt; tag</p>
                 <p>The Pyrenees is a range of mountains in southwest Europe that forms a natural border between France and Spain.
                     It separates the Iberian Peninsula from the rest of continental Europe, and extends for about 491 km
                     (305 mi) from the Bay of Biscay (Cap Higuer) to the Mediterranean Sea (Cap de Creus). This clip is an
@@ -69,15 +78,19 @@
                 <embed src="https://www.youtube.com/embed/-Vq0iAux38A" height="253" width="449">
             </section>
         </article>
+        <hr>
         <h3>We'll now take a look at some other tags</h3>
+        <hr>
         <div class="row">
             <div class="col-md-4">
                 <p>The &lt;details&gt; and &lt;summary&gt; tags</p>
-                <details>
-                    <summary>Copyright 2016.</summary>
-                    <p> - by Zeolearn LLC. All Rights Reserved.</p>
-                    <p>All content and graphics on this web site are the property of the company Zeolearn LLC.</p>
-                </details>
+                <div style="display: table;">
+                    <details id="details-tag" style="display:table-cell;vertical-align:middle;">
+                        <summary>Copyright 2016.</summary>
+                        <p style="margin-left:auto;margin-right:auto;"> - by Zeolearn LLC. All Rights Reserved.</p>
+                        <p style="margin-left:auto;margin-right:auto;">All content and graphics on this web site are the property of the company Zeolearn LLC.</p>
+                    </details>
+                </div>
             </div>
             <div class="col-md-4">
                 <p>The &lt;canvas&gt; element</p>
@@ -120,6 +133,39 @@
 
             </div>
         </div>
+        <hr>
+        <h3>The 3rd row - and some interesting HTML5 API</h3>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <p>Indexed DB</p>
+                <div class="container">
+                    <form>
+                        <p>
+                            <label for="name">Name:</label> <input id="name" disabled> <span id="status"></span>
+                        </p>
+                    </form>
+
+                    <div id="displayEmployee">Emp: Details</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <p>XMLHttpRequest</p>
+                <div class="container">
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <p>Web Workers</p>
+                <div class="container">
+                    <button onclick="sayHI()">Say HI</button>
+                    <button onclick="unknownCmd()">Send unknown command</button>
+                    <button onclick="stop()">Stop worker</button>
+                    <output id="result"></output>
+                </div>
+            </div>
+        </div>
+        <hr>
     </main>
     <br>
     <br>
@@ -137,10 +183,42 @@
     </footer>
     <img id="scream" width="220" height="277" src="/images/pic_the_scream.jpg" alt="The Scream" class="hidden">
     <script src="/javascripts/vendor/jquery-1.12.0.min.js"></script>
+    <script src="/javascripts/vendor/jquery-ui.min.js"></script>
     <script>window.jQuery || document.write('<script src="/javascripts/vendor/jquery-1.12.0.min.js"><\/script>')</script>
     <script src="/javascripts/vendor/bootstrap.min.js"></script>
     <script src="/javascripts/plugins.js"></script>
     <script src="/javascripts/main.js"></script>
+    <script>
+                console.log('In web workers section');
+        var worker = new Worker('task.js');
+
+        function sayHI() {
+            console.log('In sayHI')
+            worker.postMessage({ 'cmd': 'start', 'msg': 'Hi' });
+        }
+        sayHI();
+
+        function stop() {
+            // worker.terminate() from this script would also stop the worker.
+            worker.postMessage({ 'cmd': 'stop', 'msg': 'Bye' });
+        }
+        /**
+         * Modern browsers can pass JSON objects to workers
+         * Earlier browsers supported only string messages
+         * Does your browser support JSON object messages?
+         */
+
+
+        function unknownCmd() {
+            worker.postMessage({ 'cmd': 'foobard', 'msg': '???' });
+        }
+
+        worker.addEventListener('message', function (e) {
+            document.getElementById('result').textContent = e.data;
+        }, false);
+
+
+    </script>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=

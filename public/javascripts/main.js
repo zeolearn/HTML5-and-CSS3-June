@@ -149,11 +149,11 @@
         }
         else {
             var store = window.localStorage
-            var testObj = {k1: 'Value1', k2: 'Value2'} //Create a JSON Object
+            var testObj = { k1: 'Value1', k2: 'Value2' } //Create a JSON Object
             store.setItem('testObjKey', JSON.stringify(testObj)); //Convert the object to its String form and store it in localStorage
             console.log('dropzone to string ', dropZone.outerHTML)
             store.setItem('dropZone', dropZone.outerHTML); //
-            if(store.getItem('testObjKey')) {
+            if (store.getItem('testObjKey')) {
                 var testObjFromLocalStorage = JSON.parse(store.getItem('testObjKey'));
                 console.log('store item t_o ', testObjFromLocalStorage);
                 var dropZoneFromLocalStorage = store.getItem('dropZone');
@@ -161,13 +161,164 @@
             }
         }
         /**
+         * IndexedDB
+         * IndexedDB is a low-level API for client-side storage of significant amounts of structured data, including files/blobs. This API uses indexes to enable high performance searches of this data.
+         * Refer: https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
+         * Demonstrated using jQueryUI autocomplete feature
+         */
+        $(document).ready(function () {
+            console.log("Startup...");
+            window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;
+            var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction;
+            var IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
+            var db;
+            var template;
+            var openRequest = indexedDB.open("employees", 1);
+
+            // Handle request for seed data
+            function handleSeed() {
+                // This is how we handle the initial data seed. Normally this would be via AJAX.
+
+                db.transaction(["employee"], "readonly").objectStore("employee").count().onsuccess = function (e) {
+                    var count = e.target.result;
+                    if (count == 0) {
+                        console.log("Need to generate fake data - stand by please...");
+                        $("#status").text("Please stand by, loading in our initial data.");
+                        var done = 0;
+                        var employees = db.transaction(["employee"], "readwrite").objectStore("employee");
+                        // Generate 1k people
+                        for (var i = 0; i < 1000; i++) {
+                            var person = generateFakePerson();
+                            // Modify our data to add a searchable field
+                            person.searchkey = person.lastname.toLowerCase();
+                            resp = employees.add(person);
+                            resp.onsuccess = function (e) {
+                                done++;
+                                if (done == 1000) {
+                                    $("#name").removeAttr("disabled");
+                                    $("#status").text("");
+                                    setupAutoComplete();
+                                } else if (done % 100 == 0) {
+                                    $("#status").text("Approximately " + Math.floor(done / 10) + "% done.");
+                                }
+                            }
+                        }
+                    } else {
+                        $("#name").removeAttr("disabled");
+                        setupAutoComplete();
+                    }
+                };
+            }
+            
+            // Autocomplete feature
+            function setupAutoComplete() {
+                $("#displayEmployee").hide();
+
+                //Create the autocomplete
+                $("#name").autocomplete({
+                    source: function (request, response) {
+
+                        console.log("Going to look for " + request.term);
+
+
+                        var transaction = db.transaction(["employee"], "readonly");
+                        var result = [];
+
+                        transaction.oncomplete = function (event) {
+                            response(result);
+                        };
+
+                        // TODO: Handle the error and return to it jQuery UI
+                        var objectStore = transaction.objectStore("employee");
+
+                        // Credit: http://stackoverflow.com/a/8961462/52160
+                        var range = IDBKeyRange.bound(request.term.toLowerCase(), request.term.toLowerCase() + "z");
+                        var index = objectStore.index("searchkey");
+
+                        index.openCursor(range).onsuccess = function (event) {
+                            var cursor = event.target.result;
+                            if (cursor) {
+                                result.push({
+                                    value: cursor.value.lastname + ", " + cursor.value.firstname,
+                                    person: cursor.value
+                                });
+                                cursor.continue();
+                            }
+                        };
+                    },
+                    minLength: 2,
+                    select: function (event, ui) {
+                        // $("#displayEmployee").show().html(template(ui.item.person)); //using handlebars.js
+                        var htmlperson = "<label>" + ui.item.person.firstname + ' ' + ui.item.person.lastname + "</label>"
+                        $("#displayEmployee").html(htmlperson);
+                        $("#displayEmployee").show();
+                    }
+                });
+
+            }
+            // Handle setup.
+            openRequest.onupgradeneeded = function (e) {
+
+                console.log("running onupgradeneeded");
+                var thisDb = e.target.result;
+
+                // Create Employee
+                if (!thisDb.objectStoreNames.contains("employee")) {
+                    console.log("I need to make the employee objectstore");
+                    var objectStore = thisDb.createObjectStore("employee", { keyPath: "id", autoIncrement: true });
+                    objectStore.createIndex("searchkey", "searchkey", { unique: false });
+                }
+
+            };
+
+            openRequest.onsuccess = function (e) {
+                db = e.target.result;
+
+                db.onerror = function (e) {
+                    alert("Sorry, an unforseen error was thrown.");
+                    console.log("***ERROR***");
+                    console.dir(e.target);
+                };
+
+                handleSeed();
+            };
+        });
+        /**
+         * XMLHttpRequest
+         */
+
+        /**
+         * Web Workers API
+         */
+
+        // Moved to html file
+
+        /**
+         * Basic web worker functionality
+         */
+        // var startWorker = function () {
+        //     var worker = new Worker('task.js');
+        //     worker.addEventListener('message', function (e) {
+        //         console.log('Worker said: ', e.data);
+        //     }, false);
+
+        //     worker.postMessage('Hello World'); // Send data to our worker.
+        // }
+
+        /**
+         * Web Sockets API
+         */
+
+        /**
          * Forms API
          */
 
-        //FileSystem API
+        /**
+         * FileSystem API
+         */
 
 
-        //IndexedDB
+
 
 
 
