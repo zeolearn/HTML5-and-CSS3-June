@@ -145,14 +145,16 @@
                             <label for="name">Name:</label> <input id="name" disabled> <span id="status"></span>
                         </p>
                     </form>
-
                     <div id="displayEmployee">Emp: Details</div>
                 </div>
             </div>
             <div class="col-md-4">
                 <p>XMLHttpRequest</p>
                 <div class="container">
-
+                    <form>
+                        <input type="button" name="getFile" value="Get XHR File" onclick="runXHR()">
+                    </form>
+                    <img src="" alt=""  id="xhrImageResult">
                 </div>
             </div>
             <div class="col-md-4">
@@ -166,6 +168,7 @@
             </div>
         </div>
         <hr>
+        <zeolearn></zeolearn>
     </main>
     <br>
     <br>
@@ -188,10 +191,11 @@
     <script src="/javascripts/vendor/bootstrap.min.js"></script>
     <script src="/javascripts/plugins.js"></script>
     <script src="/javascripts/main.js"></script>
+    <!--<script src="/javascripts/task.js"></script>-->
     <script>
-                console.log('In web workers section');
-        var worker = new Worker('task.js');
-
+        console.log('In web workers section');
+        var worker = new Worker('/javascripts/task.js');
+        console.log('New worker :', worker);
         function sayHI() {
             console.log('In sayHI')
             worker.postMessage({ 'cmd': 'start', 'msg': 'Hi' });

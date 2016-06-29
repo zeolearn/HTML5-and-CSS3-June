@@ -162,7 +162,8 @@
         }
         /**
          * IndexedDB
-         * IndexedDB is a low-level API for client-side storage of significant amounts of structured data, including files/blobs. This API uses indexes to enable high performance searches of this data.
+         * IndexedDB is a low-level API for client-side storage of significant amounts of structured data, including files/blobs. 
+         * This API uses indexes to enable high performance searches of this data.
          * Refer: https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
          * Demonstrated using jQueryUI autocomplete feature
          */
@@ -209,7 +210,7 @@
                     }
                 };
             }
-            
+
             // Autocomplete feature
             function setupAutoComplete() {
                 $("#displayEmployee").hide();
@@ -283,27 +284,57 @@
                 handleSeed();
             };
         });
-        /**
-         * XMLHttpRequest
-         */
 
         /**
          * Web Workers API
+         * Refer to inline script in index.html
          */
-
-        // Moved to html file
 
         /**
-         * Basic web worker functionality
+         * XMLHttpRequest
          */
-        // var startWorker = function () {
-        //     var worker = new Worker('task.js');
-        //     worker.addEventListener('message', function (e) {
-        //         console.log('Worker said: ', e.data);
-        //     }, false);
+        runXHR = function () {
+            console.log('Start XHR')
+            window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+            function onError(e) {
+                console.log('Window.FileSystem Error', e);
+            }
 
-        //     worker.postMessage('Hello World'); // Send data to our worker.
-        // }
+            var xhr = new XMLHttpRequest();
+            // xhr.setRequestHeader("Accept-Charset", "x-user-defined");
+            xhr.overrideMimeType('text/plain; charset=x-user-defined');
+
+            xhr.open('GET', '/images/khardung-la.jpg', true);
+            xhr.responseType = 'arraybuffer';
+
+            xhr.onload = function (e) {
+                //Receiving response...
+                console.log('XHR Receiving response...')
+                var xhrResult = document.getElementById('xhrImageResult');
+                var blob = new Blob([xhr.response], { type: 'image/jpg' });
+                var imgUrl = window.URL.createObjectURL(blob);
+
+                // xhrResult.innerHTML = '<img src="data:image/jpg;base64,' + imgUrl + '"/>';
+                xhrResult.src = imgUrl;
+                window.requestFileSystem(TEMPORARY, 1024 * 1024, function (fs) {
+                    console.log('Filesystem root is: ', fs.root)
+                    fs.root.getFile('kl.jpg', { create: true }, function (fileEntry) {
+                        fileEntry.createWriter(function (writer) {
+                            // Set up action to take in case of successful write
+                            writer.onwrite = function (e) { console.log('File written to file system') };
+                            // Set up action to take in case of write failure
+                            writer.onerror = function (e) { console.log('Error writing file to file system') };
+                            // Construct the blob object from the xhr response i.e. content of file received from the server
+                            // write to file
+                            writer.write(blob);
+
+                        }, onError);
+                    }, onError);
+                }, onError);
+            };
+
+            xhr.send();
+        }
 
         /**
          * Web Sockets API
